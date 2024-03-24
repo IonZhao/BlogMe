@@ -1,9 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { uploadImg, updatePost, addPost } from "../controller/postController";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Write = () => {
-  const [value, setValue] = React.useState("");
+  const state = useLocation().state;
+
+  const [value, setValue] = useState(state?.description || "");
+  const [title, setTitle] = useState(state?.title || "");
+  const [file, setFile] = useState(null);
+  const [cat, setCat] = useState(state?.cat || "");
+  const nevigate = useNavigate();
+
+  const upload = async () => {
+    console.log("uploading");
+    const formData = new FormData();
+
+    formData.append("file", file);
+    console.log(formData);
+
+    const url = await uploadImg(formData);
+    return url;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const url = await upload();
+
+    let post = {
+      title,
+      description: value,
+      cat,
+    };
+    if (state) {
+      console.log("state", state);
+      // post.id = state.id;
+      // post.date = state.date;
+      // post.uid = state.uid;
+      post = { ...state, ...post };
+      post.img = file ? url : state.img;
+      updatePost(post);
+    } else {
+      post.img = file ? url : "https://source.unsplash.com/random";
+      addPost(post);
+    }
+    nevigate("/");
+  };
 
   return (
     <div className="add">
@@ -11,15 +54,15 @@ const Write = () => {
         <input
           type="text"
           placeholder="Title"
-          // value={title}
-          onChange={(e) => setValue({ title: e.target.value })}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <div className="editorContainer">
           <ReactQuill
             className="editor"
             theme="snow"
             value={value}
-            onChange={(value) => setValue({ value })}
+            onChange={setValue}
           />
         </div>
       </div>
@@ -37,14 +80,14 @@ const Write = () => {
             type="file"
             id="file"
             name=""
-            // onChange={(e) => this.setState({ file: e.target.files[0] })}
+            onChange={(e) => setFile(e.target.files[0])}
           />
           <label className="file" htmlFor="file">
             Upload Image
           </label>
           <div className="buttons">
             <button>Save as a draft</button>
-            <button onClick="">Publish</button>
+            <button onClick={handleSubmit}>Publish</button>
           </div>
         </div>
 
@@ -56,7 +99,8 @@ const Write = () => {
               name="cat"
               value="art"
               id="art"
-              // onChange={(e) => this.setState({ cat: e.target.value })}
+              checked={cat === "art"}
+              onChange={(e) => setCat(e.target.value)}
             />
             <label htmlFor="art">Art</label>
           </div>
@@ -67,16 +111,19 @@ const Write = () => {
               name="cat"
               value="science"
               id="science"
-              // onChange={(e) => this.setState({ cat: e.target.value })}
+              checked={cat === "science"}
+              onChange={(e) => setCat(e.target.value)}
             ></input>
             <label htmlFor="science">Science</label>
           </div>
+
           <div className="cat">
             <input
               type="radio"
               name="cat"
               value="technology"
-              // onChange={(e) => this.setState({ cat: e.target.value })}
+              checked={cat === "technology"}
+              onChange={(e) => setCat(e.target.value)}
               id="technology"
             ></input>
             <label htmlFor="technology">Technology</label>
@@ -86,8 +133,9 @@ const Write = () => {
               type="radio"
               name="cat"
               value="cinema"
+              checked={cat === "cinema"}
               id="cinema"
-              // onChange={(e) => this.setState({ cat: e.target.value })}
+              onChange={(e) => setCat(e.target.value)}
             ></input>
 
             <label htmlFor="cinema">Cinema</label>
@@ -98,17 +146,20 @@ const Write = () => {
               name="cat"
               value="design"
               id="design"
-              // onChange={(e) => this.setState({ cat: e.target.value })}
+              checked={cat === "design"}
+              onChange={(e) => setCat(e.target.value)}
             ></input>
             <label htmlFor="design">Design</label>
           </div>
+
           <div className="cat">
             <input
               type="radio"
               name="cat"
               value="food"
               id="food"
-              // onChange={(e) => this.setState({ cat: e.target.value })}
+              checked={cat === "food"}
+              onChange={(e) => setCat(e.target.value)}
             ></input>
             <label htmlFor="food">Food</label>
           </div>
