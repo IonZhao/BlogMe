@@ -64,6 +64,7 @@ const Single = () => {
         <h1 className="title">{post?.title}</h1>
 
         <p
+          className="description"
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(post.description),
           }}

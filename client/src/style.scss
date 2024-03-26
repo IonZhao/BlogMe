@@ -256,6 +256,13 @@ $dark: #ff407d;
             cursor: pointer;
           }
         }
+
+        .description {
+          span {
+            line-height: 1.2;
+          }
+        }
+
         h1 {
           font-size: 42px;
           color: #333;
