@@ -5,8 +5,8 @@ $dark: #ff407d;
   display: flex;
   justify-content: center;
   .container {
-    //width: 80%;
-    width: 1024px;
+    width: 70%;
+    // width: 1024px;
 
     .link {
       text-decoration: none;
@@ -14,6 +14,13 @@ $dark: #ff407d;
     }
 
     .auth {
+      // Put the background color to the whole page
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 100vw;
+
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -67,6 +74,7 @@ $dark: #ff407d;
     //NAVBAR
     .navbar {
       .container {
+        width: 100%;
         padding: 10px 0px;
         display: flex;
         justify-content: space-between;

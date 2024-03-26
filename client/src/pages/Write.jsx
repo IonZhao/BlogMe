@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { uploadImg, updatePost, addPost } from "../controller/postController";
 import { useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/authContext";
 
 const Write = () => {
   const state = useLocation().state;
@@ -11,14 +12,17 @@ const Write = () => {
   const [title, setTitle] = useState(state?.title || "");
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.cat || "");
+  const { currentUser } = useContext(AuthContext);
+
   const nevigate = useNavigate();
 
   const upload = async () => {
-    console.log("uploading");
-    const formData = new FormData();
+    if (!file) return;
 
+    // console.log("uploading");
+    const formData = new FormData();
     formData.append("file", file);
-    console.log(formData);
+    // console.log(formData);
 
     const url = await uploadImg(formData);
     return url;
@@ -28,24 +32,40 @@ const Write = () => {
     e.preventDefault();
     const url = await upload();
 
+    const user = currentUser;
+
     let post = {
       title,
       description: value,
       cat,
     };
     if (state) {
-      console.log("state", state);
-      // post.id = state.id;
-      // post.date = state.date;
-      // post.uid = state.uid;
-      post = { ...state, ...post };
+      post.id = state.id;
+      post.date = state.date;
+      post.uid = state.uid;
       post.img = file ? url : state.img;
-      updatePost(post);
+      if (!user || post.uid !== user.id) {
+        alert("You are not authorized to update this post!");
+        return;
+      }
+      post.uid = user.id;
+      // console.log("Updating", post);
+      nevigate("/");
+      await updatePost(post);
     } else {
-      post.img = file ? url : "https://source.unsplash.com/random";
-      addPost(post);
+      post.img = file
+        ? url
+        : "https://source.unsplash.com/random?seed=" +
+          Math.floor(Math.random() * 100);
+      if (!user) {
+        alert("You are not authorized to add this post, please login first!");
+        return;
+      }
+      post.uid = user.id;
+      // console.log("submitting", post);
+      nevigate("/");
+      await addPost(post);
     }
-    nevigate("/");
   };
 
   return (

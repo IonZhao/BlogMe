@@ -171,9 +171,11 @@ function MyFirebase() {
   };
 
   me.addPost = async (post) => {
-    const timestamp = Date.now();
+    //https://stackoverflow.com/questions/53482750/convert-date-to-timestamp-for-storing-into-firebase-firestore-in-javascript
+    const timestamp = Timestamp.fromDate(new Date());
+    // const timestamp = Date.now();
     post.date = timestamp;
-    console.log("addPost", post);
+    // console.log("addPost", post);
 
     const docRef = await addDoc(collection(db, "posts"), post);
     return docRef.id;
@@ -190,6 +192,8 @@ function MyFirebase() {
     return response;
   };
 
+  // https://firebase.google.com/docs/storage/web/upload-files
+  // Upload an image
   me.uploadImg = async (file) => {
     const storage = getStorage(app);
     const storageRef = ref(storage, `images/${file.name}`);

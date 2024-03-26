@@ -5,7 +5,10 @@ async function register(user) {
   if (exists) {
     return "User already exists!";
   } else {
-    user.image = "https://source.unsplash.com/random";
+    user.image =
+      "https://source.unsplash.com/random?seed=" +
+      Math.floor(Math.random() * 100);
+    console.log("user", user);
     await myFirebase.addUser(user);
     return "User has been created!";
   }

@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { getPosts } from "../controller/postController";
+import { Link } from "react-router-dom";
 
 function Menu({ cat }) {
   const [posts, setPosts] = useState([]);
@@ -20,7 +21,10 @@ function Menu({ cat }) {
         <div className="post" key={post.id}>
           <img src={`${post?.img}`} alt="" />
           <h2>{post.title}</h2>
-          <button>Read More</button>
+          <Link className="link" to={`/post/${post.id}`}>
+            <button>Read More</button>
+          </Link>
+          {/* <button>Read More</button> */}
         </div>
       ))}
     </div>

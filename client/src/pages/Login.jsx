@@ -29,9 +29,10 @@ const Login = () => {
 
     if (typeof response === "object") {
       //Store the user in the local storage
-      localStorage.setItem("user", JSON.stringify(response));
+      // localStorage.setItem("user", JSON.stringify(response));
+
       //Redirect to the home page
-      console.log("nevigate", nevigate);
+      // console.log("nevigate", nevigate);
       nevigate("/");
     } else {
       setError(response);

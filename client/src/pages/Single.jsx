@@ -5,7 +5,8 @@ import Menu from "../components/Menu";
 import { useEffect, useState, useContext } from "react";
 import { getPost, deletePost } from "../controller/postController";
 import moment from "moment";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/authContext";
+import DOMPurify from "dompurify";
 
 const Single = () => {
   const [post, setPost] = useState([]);
@@ -20,7 +21,9 @@ const Single = () => {
 
   useEffect(() => {
     const getFromStore = async () => {
+      // console.log("id", id);
       const data = await getPost(id);
+      // console.log("data", data);
       data.id = id;
       setPost(data);
     };
@@ -28,18 +31,13 @@ const Single = () => {
   }, [id]);
 
   const handleDelete = async () => {
-    const response = await deletePost(id, post.uid);
-    if (response === "You are not authorized to delete this post") {
-      alert(response);
+    const user = currentUser;
+    if (!user || user.id !== post.uid) {
+      alert("You are not authorized to delete this post!");
       return;
     }
+    await deletePost(id, post.uid);
     nevagate("/");
-    console.log("delete");
-  };
-
-  const getText = (html) => {
-    const doc = new DOMParser().parseFromString(html, "text/html");
-    return doc.body.textContent;
   };
 
   return (
@@ -64,7 +62,12 @@ const Single = () => {
           )}
         </div>
         <h1 className="title">{post?.title}</h1>
-        {getText(post.description)}
+
+        <p
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(post.description),
+          }}
+        ></p>
       </div>
       <Menu cat={post.cat} />
     </div>
