@@ -121,6 +121,7 @@ describe("Test CRUD Posts", () => {
     )
       .first()
       .should("have.text", post.content + updatedPost.content);
+    cy.wait(1000);
   });
 
   it("delete a post", () => {
@@ -137,6 +138,7 @@ describe("Test CRUD Posts", () => {
     cy.get(
       "#root > div > div > div > div.home > div > div:nth-child(1) > div.content > a:nth-child(1) > h1"
     ).should("not.equal", post.title + updatedPost.title);
+    cy.wait(1000);
   });
 
   it("logout", () => {
