@@ -1,6 +1,7 @@
 describe("BloeMe load properly", () => {
   beforeEach(() => {
     cy.visit("http://localhost:5173/");
+    // cy.visit("https://blogme-7f01a.web.app/");
   });
   //   it("passes", () => {
   //     cy.visit("http://localhost:5173/");
@@ -34,6 +35,7 @@ describe("BloeMe load properly", () => {
 describe("Test CRUD Posts", () => {
   beforeEach(() => {
     cy.visit("http://localhost:5173/");
+    // cy.visit("https://blogme-7f01a.web.app/");
     cy.get(
       "#root > div > div > div > div.navbar > div > div.links > a:nth-child(8)"
     ).click();
