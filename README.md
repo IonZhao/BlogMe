@@ -75,7 +75,7 @@ https://docs.google.com/document/d/1i37M0PNeXPNNubzbMjXmih-7yYnPKnEwuvns12MmXDo/
 
 You can check the presentation video of this project at:
 
-https://youtu.be/IMZXUimCmY8
+https://youtu.be/bu_RI4bC5qM
 
 ## Get Started
 
